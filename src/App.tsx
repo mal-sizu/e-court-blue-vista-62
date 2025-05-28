@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "r
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import React from "react";
 
 // Components
 import Login from "./components/auth/Login";
@@ -97,21 +98,23 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 // Main Layout wrapper with sidebar
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="min-h-screen flex w-full bg-gradient-to-br from-blue-50 to-white">
-      <AppSidebar />
-      <motion.main 
-        className="flex-1 p-6"
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        <div className="max-w-7xl mx-auto">
-          <PageWrapper>
-            {children}
-          </PageWrapper>
-        </div>
-      </motion.main>
-    </div>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-gradient-to-br from-blue-50 to-white">
+        <AppSidebar />
+        <motion.main 
+          className="flex-1 p-6"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="max-w-7xl mx-auto">
+            <PageWrapper>
+              {children}
+            </PageWrapper>
+          </div>
+        </motion.main>
+      </div>
+    </SidebarProvider>
   );
 };
 
@@ -212,19 +215,19 @@ const AppRoutes = () => {
 // Main App Component
 const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <AuthProvider>
-          <SidebarProvider>
+    <React.StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider delayDuration={0}>
+          <AuthProvider>
             <Router>
               <AppRoutes />
+              <Toaster />
+              <Sonner />
             </Router>
-          </SidebarProvider>
-        </AuthProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+          </AuthProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </React.StrictMode>
   );
 };
 
