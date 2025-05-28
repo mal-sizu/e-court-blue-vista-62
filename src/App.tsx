@@ -60,6 +60,7 @@ const PageWrapper = ({ children }: { children: React.ReactNode }) => {
         exit="out"
         variants={pageVariants}
         transition={pageTransition}
+        className="w-full h-full"
       >
         {children}
       </motion.div>

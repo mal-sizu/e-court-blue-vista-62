@@ -7,6 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Dialog, DialogTrigger, DialogContent } from '../ui/dialog';
+import { AddUserForm } from '../forms';
 
 const UsersPage = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -71,10 +73,19 @@ const UsersPage = () => {
           <h1 className="text-2xl font-semibold text-gray-900">Users</h1>
           <p className="text-gray-600">Manage system users and permissions</p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
-          <Plus className="h-4 w-4 mr-2" />
-          Add User
-        </Button>
+
+         <Dialog>
+          <DialogTrigger asChild>
+            <Button className="bg-blue-600 hover:bg-blue-700">
+              <Plus className="h-4 w-4 mr-2" />
+              Add User
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <AddUserForm />
+          </DialogContent>
+        </Dialog>
+
       </div>
 
       {/* Filters */}

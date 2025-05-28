@@ -5,7 +5,6 @@ import CaseRequestHeader from './CaseRequestHeader';
 import CaseRequestStats from './CaseRequestStats';
 import CaseRequestFilters from './CaseRequestFilters';
 import CaseRequestTable from './CaseRequestTable';
-import CaseRequestForm from './CaseRequestForm';
 
 interface CaseRequest {
   id: string;
@@ -98,7 +97,7 @@ const CaseRequestDashboard = () => {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
-      <CaseRequestHeader onCreateRequest={() => setShowCreateForm(true)} />
+      <CaseRequestHeader />
       
       <CaseRequestStats />
       
@@ -113,11 +112,6 @@ const CaseRequestDashboard = () => {
       
       <CaseRequestTable caseRequests={caseRequests} />
 
-      <CaseRequestForm
-        isOpen={showCreateForm}
-        onClose={() => setShowCreateForm(false)}
-        onSuccess={handleCreateSuccess}
-      />
     </div>
   );
 };

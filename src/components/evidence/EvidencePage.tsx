@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogTrigger, DialogContent } from '../ui/dialog';
+import { UploadEvidenceForm } from '../forms';
 
 const EvidencePage = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -74,10 +76,19 @@ const EvidencePage = () => {
           <h1 className="text-2xl font-semibold text-gray-900">Evidence</h1>
           <p className="text-gray-600">Manage and track evidence items</p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
-          <Plus className="h-4 w-4 mr-2" />
-          Upload Evidence
-        </Button>
+
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className="bg-blue-600 hover:bg-blue-700">
+              <Plus className="h-4 w-4 mr-2" />
+              Upload Evidence
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <UploadEvidenceForm />
+          </DialogContent>
+        </Dialog>
+
       </div>
 
       {/* Filters */}

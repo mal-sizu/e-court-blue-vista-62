@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogTrigger, DialogContent } from '../ui/dialog';
+import { AddRecordForm } from '../forms';
 
 const RecordRoomPage = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -69,10 +71,19 @@ const RecordRoomPage = () => {
           <h1 className="text-2xl font-semibold text-gray-900">Record Room</h1>
           <p className="text-gray-600">Manage physical and digital records</p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
-          <Plus className="h-4 w-4 mr-2" />
-          Add Record
-        </Button>
+
+         <Dialog>
+          <DialogTrigger asChild>
+            <Button className="bg-blue-600 hover:bg-blue-700">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Record
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <AddRecordForm />
+          </DialogContent>
+        </Dialog>
+
       </div>
 
       {/* Filters */}

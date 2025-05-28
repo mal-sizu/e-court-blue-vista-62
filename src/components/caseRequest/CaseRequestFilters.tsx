@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '../ui/button';
@@ -46,29 +45,37 @@ const CaseRequestFilters = ({
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:w-auto">
-              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                <SelectTrigger className="h-11">
-                  <SelectValue placeholder="All Categories" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">All Categories</SelectItem>
-                  <SelectItem value="Civil Case">Civil Case</SelectItem>
-                  <SelectItem value="Criminal Case">Criminal Case</SelectItem>
-                  <SelectItem value="Labour Case">Labour Case</SelectItem>
-                </SelectContent>
-              </Select>
+              <div>
+                <label htmlFor="categoryFilter" className="sr-only">Category</label>
+                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                  <SelectTrigger id="categoryFilter" className="h-11">
+                    <SelectValue placeholder="All Categories" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {/* Use a non-empty value for "All" option */}
+                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="Civil Case">Civil Case</SelectItem>
+                    <SelectItem value="Criminal Case">Criminal Case</SelectItem>
+                    <SelectItem value="Labour Case">Labour Case</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="h-11">
-                  <SelectValue placeholder="All Statuses" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">All Statuses</SelectItem>
-                  <SelectItem value="Pending">Pending</SelectItem>
-                  <SelectItem value="Approved">Approved</SelectItem>
-                  <SelectItem value="Rejected">Rejected</SelectItem>
-                </SelectContent>
-              </Select>
+              <div>
+                <label htmlFor="statusFilter" className="sr-only">Status</label>
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger id="statusFilter" className="h-11">
+                    <SelectValue placeholder="All Statuses" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {/* Use a non-empty value for "All" option */}
+                    <SelectItem value="all">All Statuses</SelectItem>
+                    <SelectItem value="Pending">Pending</SelectItem>
+                    <SelectItem value="Approved">Approved</SelectItem>
+                    <SelectItem value="Rejected">Rejected</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
               <Button variant="outline" className="h-11">
                 <Filter className="h-4 w-4 mr-2" />

@@ -52,7 +52,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+    <div className="min-h-screen w-screen flex bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <BrandingPanel step={step} />
 
       {/* Right Side - Login Form */}
