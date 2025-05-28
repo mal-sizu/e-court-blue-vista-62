@@ -6,10 +6,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { motion } from "framer-motion";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 // Components
 import Login from "./components/auth/Login";
-import Navbar from "./components/layout/Navbar";
+import AppSidebar from "./components/layout/AppSidebar";
 import Dashboard from "./components/dashboard/Dashboard";
 import CaseRequestDashboard from "./components/caseRequest/CaseRequestDashboard";
 import NotFound from "./pages/NotFound";
@@ -22,7 +23,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-white">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
       </div>
     );
@@ -35,18 +36,18 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-// Main Layout wrapper
+// Main Layout wrapper with sidebar
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
+    <div className="min-h-screen flex w-full bg-gradient-to-br from-blue-50 to-white">
+      <AppSidebar />
       <motion.main 
-        className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        className="flex-1 p-6"
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <div className="px-4 py-6 sm:px-0">
+        <div className="max-w-7xl mx-auto">
           {children}
         </div>
       </motion.main>
@@ -104,9 +105,11 @@ const App = () => {
         <Toaster />
         <Sonner />
         <AuthProvider>
-          <Router>
-            <AppRoutes />
-          </Router>
+          <SidebarProvider>
+            <Router>
+              <AppRoutes />
+            </Router>
+          </SidebarProvider>
         </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>
