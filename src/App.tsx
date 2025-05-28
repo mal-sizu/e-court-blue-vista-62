@@ -13,6 +13,11 @@ import Login from "./components/auth/Login";
 import AppSidebar from "./components/layout/AppSidebar";
 import Dashboard from "./components/dashboard/Dashboard";
 import CaseRequestDashboard from "./components/caseRequest/CaseRequestDashboard";
+import CasesPage from "./components/cases/CasesPage";
+import HearingsPage from "./components/hearings/HearingsPage";
+import EvidencePage from "./components/evidence/EvidencePage";
+import RecordRoomPage from "./components/recordRoom/RecordRoomPage";
+import UsersPage from "./components/users/UsersPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -78,6 +83,46 @@ const AppRoutes = () => {
         <ProtectedRoute>
           <Layout>
             <CaseRequestDashboard />
+          </Layout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/cases" element={
+        <ProtectedRoute>
+          <Layout>
+            <CasesPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/hearings" element={
+        <ProtectedRoute>
+          <Layout>
+            <HearingsPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/evidence" element={
+        <ProtectedRoute>
+          <Layout>
+            <EvidencePage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/record-room" element={
+        <ProtectedRoute>
+          <Layout>
+            <RecordRoomPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/users" element={
+        <ProtectedRoute>
+          <Layout>
+            <UsersPage />
           </Layout>
         </ProtectedRoute>
       } />
