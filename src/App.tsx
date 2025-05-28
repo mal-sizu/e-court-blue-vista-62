@@ -21,6 +21,13 @@ import RecordRoomPage from "./components/recordRoom/RecordRoomPage";
 import UsersPage from "./components/users/UsersPage";
 import NotFound from "./pages/NotFound";
 
+// Form Pages
+import UserFormPage from "./pages/UserFormPage";
+import RecordFormPage from "./pages/RecordFormPage";
+import EvidenceFormPage from "./pages/EvidenceFormPage";
+import HearingFormPage from "./pages/HearingFormPage";
+import CaseFormPage from "./pages/CaseFormPage";
+
 const queryClient = new QueryClient();
 
 // Page transition variants
@@ -189,6 +196,47 @@ const AppRoutes = () => {
         <ProtectedRoute>
           <Layout>
             <UsersPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+
+      {/* Form Routes */}
+      <Route path="/user" element={
+        <ProtectedRoute>
+          <Layout>
+            <UserFormPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/record" element={
+        <ProtectedRoute>
+          <Layout>
+            <RecordFormPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/evidence-form" element={
+        <ProtectedRoute>
+          <Layout>
+            <EvidenceFormPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/hearing" element={
+        <ProtectedRoute>
+          <Layout>
+            <HearingFormPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/case" element={
+        <ProtectedRoute>
+          <Layout>
+            <CaseFormPage />
           </Layout>
         </ProtectedRoute>
       } />

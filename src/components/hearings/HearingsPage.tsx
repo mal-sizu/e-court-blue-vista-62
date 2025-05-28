@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, MapPin, Search, Filter, Plus } from 'lucide-react';
@@ -6,9 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useNavigate } from 'react-router-dom';
 
 const HearingsPage = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const navigate = useNavigate();
 
   const hearings = [
     {
@@ -64,7 +65,10 @@ const HearingsPage = () => {
           <h1 className="text-2xl font-semibold text-gray-900">Hearings</h1>
           <p className="text-gray-600">Schedule and manage court hearings</p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <Button 
+          className="bg-blue-600 hover:bg-blue-700"
+          onClick={() => navigate('/hearing')}
+        >
           <Plus className="h-4 w-4 mr-2" />
           Schedule Hearing
         </Button>
