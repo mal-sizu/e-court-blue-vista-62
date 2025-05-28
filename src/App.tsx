@@ -7,7 +7,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "r
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import React from "react";
 
 // Components
 import Login from "./components/auth/Login";
@@ -20,13 +19,6 @@ import EvidencePage from "./components/evidence/EvidencePage";
 import RecordRoomPage from "./components/recordRoom/RecordRoomPage";
 import UsersPage from "./components/users/UsersPage";
 import NotFound from "./pages/NotFound";
-
-// Form Pages
-import UserFormPage from "./pages/UserFormPage";
-import RecordFormPage from "./pages/RecordFormPage";
-import EvidenceFormPage from "./pages/EvidenceFormPage";
-import HearingFormPage from "./pages/HearingFormPage";
-import CaseFormPage from "./pages/CaseFormPage";
 
 const queryClient = new QueryClient();
 
@@ -105,23 +97,21 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 // Main Layout wrapper with sidebar
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gradient-to-br from-blue-50 to-white">
-        <AppSidebar />
-        <motion.main 
-          className="flex-1 p-6"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <div className="max-w-7xl mx-auto">
-            <PageWrapper>
-              {children}
-            </PageWrapper>
-          </div>
-        </motion.main>
-      </div>
-    </SidebarProvider>
+    <div className="min-h-screen flex w-full bg-gradient-to-br from-blue-50 to-white">
+      <AppSidebar />
+      <motion.main 
+        className="flex-1 p-6"
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className="max-w-7xl mx-auto">
+          <PageWrapper>
+            {children}
+          </PageWrapper>
+        </div>
+      </motion.main>
+    </div>
   );
 };
 
@@ -199,47 +189,6 @@ const AppRoutes = () => {
           </Layout>
         </ProtectedRoute>
       } />
-
-      {/* Form Routes */}
-      <Route path="/user" element={
-        <ProtectedRoute>
-          <Layout>
-            <UserFormPage />
-          </Layout>
-        </ProtectedRoute>
-      } />
-
-      <Route path="/record" element={
-        <ProtectedRoute>
-          <Layout>
-            <RecordFormPage />
-          </Layout>
-        </ProtectedRoute>
-      } />
-
-      <Route path="/evidence-form" element={
-        <ProtectedRoute>
-          <Layout>
-            <EvidenceFormPage />
-          </Layout>
-        </ProtectedRoute>
-      } />
-
-      <Route path="/hearing" element={
-        <ProtectedRoute>
-          <Layout>
-            <HearingFormPage />
-          </Layout>
-        </ProtectedRoute>
-      } />
-
-      <Route path="/case" element={
-        <ProtectedRoute>
-          <Layout>
-            <CaseFormPage />
-          </Layout>
-        </ProtectedRoute>
-      } />
       
       {/* Redirect root to dashboard */}
       <Route 
@@ -263,19 +212,19 @@ const AppRoutes = () => {
 // Main App Component
 const App = () => {
   return (
-    <React.StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider delayDuration={0}>
-          <AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <AuthProvider>
+          <SidebarProvider>
             <Router>
               <AppRoutes />
-              <Toaster />
-              <Sonner />
             </Router>
-          </AuthProvider>
-        </TooltipProvider>
-      </QueryClientProvider>
-    </React.StrictMode>
+          </SidebarProvider>
+        </AuthProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
   );
 };
 

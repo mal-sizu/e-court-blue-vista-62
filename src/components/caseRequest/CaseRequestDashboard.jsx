@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ApprovalStatus } from '../../constants/dataTypes';
 import Button from '../ui/Button';
-import CaseRequestMultiStepForm from './CaseRequestMultiStepForm';
+import CaseRequestForm from './CaseRequestForm';
 
 const CaseRequestDashboard = () => {
   const [caseRequests, setCaseRequests] = useState([]);
@@ -211,7 +212,7 @@ const CaseRequestDashboard = () => {
       </motion.div>
 
       {/* Create Case Request Modal */}
-      <CaseRequestMultiStepForm
+      <CaseRequestForm
         isOpen={showCreateForm}
         onClose={() => setShowCreateForm(false)}
         onSuccess={handleCreateSuccess}
