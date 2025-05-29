@@ -11,18 +11,18 @@ const caseService = {
     return response.data;
   },
 
-  createCase: async (caseData) => {
-    const response = await api.post('/cases', caseData);
+  createCase: async (formData) => {
+    const response = await api.post('/case/create', formData);
     return response.data;
   },
 
-  updateCase: async (id, caseData) => {
-    const response = await api.put(`/cases/${id}`, caseData);
+  updateCase: async (formData) => {
+    const response = await api.put('/case/update', formData);
     return response.data;
   },
 
-  deleteCase: async (id) => {
-    const response = await api.delete(`/cases/${id}`);
+  deleteCase: async (caseID) => {
+    const response = await api.delete(`/case/${caseID}`);
     return response.data;
   },
 
@@ -44,6 +44,11 @@ const caseService = {
 
   getCaseTimeline: async (caseId) => {
     const response = await api.get(`/cases/${caseId}/timeline`);
+    return response.data;
+  },
+
+  searchCases: async (filters = {}) => {
+    const response = await api.get('/case/search', { params: filters });
     return response.data;
   }
 };

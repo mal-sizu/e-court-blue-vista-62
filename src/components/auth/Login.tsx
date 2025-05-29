@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
@@ -7,6 +6,8 @@ import { Mail, Shield } from 'lucide-react';
 import BrandingPanel from './BrandingPanel';
 import LoginForm from './LoginForm';
 import OTPForm from './OTPForm';
+import authService from '../../services/authService';
+import bcrypt from 'bcryptjs';
 
 const Login = () => {
   const [step, setStep] = useState<'login' | 'otp'>('login');
@@ -16,9 +17,13 @@ const Login = () => {
 
   const handleLogin = async (data: { email: string; password: string }) => {
     setLoading(true);
+    const hashedPassword = await bcrypt.hash(data.password, 10);
     try {
+      const response = await authService.login({
+        email: data.email,
+        password: hashedPassword
+      });
       setEmail(data.email);
-      await new Promise(resolve => setTimeout(resolve, 1000));
       setStep('otp');
     } catch (error) {
       console.error('Login error:', error);
@@ -30,16 +35,12 @@ const Login = () => {
   const handleOTPVerification = async (data: { otp: string }) => {
     setLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const userData = {
-        id: '1',
-        fullName: 'John Doe',
+      const response = await authService.verifyOTPLogin({
         email: email,
-        role: 'registrar'
-      };
-      
-      login(userData, 'mock-token-123');
+        otp: data.otp
+      });
+      const { user, token } = response;
+      login(user, token);
     } catch (error) {
       console.error('OTP verification error:', error);
     } finally {

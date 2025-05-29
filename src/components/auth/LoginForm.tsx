@@ -47,7 +47,7 @@ const LoginForm = ({ onSubmit, loading }: LoginFormProps) => {
               <FormItem>
                 <FormLabel className="flex items-center space-x-2 text-gray-700 font-medium">
                   <Mail className="w-4 h-4" />
-                  <span>Email Address</span>
+                  <span>Office Email </span>
                 </FormLabel>
                 <FormControl>
                   <Input 

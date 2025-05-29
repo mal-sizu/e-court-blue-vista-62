@@ -53,7 +53,12 @@
 
   type NewCaseFormData = z.infer<typeof newCaseSchema>;
 
-  const NewCaseForm: React.FC = () => {
+  // Add prop type for callback
+  type NewCaseFormProps = {
+    onCaseCreated?: () => void;
+  };
+
+  const NewCaseForm: React.FC<NewCaseFormProps> = ({ onCaseCreated }) => {
     const [loading, setLoading] = useState(false);
 
     const form = useForm<NewCaseFormData>({
@@ -81,10 +86,11 @@
     const handleSubmit = async (data: NewCaseFormData) => {
       setLoading(true);
       try {
-        // Mock API call
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        console.log('New case data:', data);
+        // Use real API call
+        const caseService = (await import('@/services/caseService')).default;
+        await caseService.createCase(data);
         form.reset();
+        if (onCaseCreated) onCaseCreated();
         // You can add success notification here
       } catch (error) {
         console.error('Error creating case:', error);

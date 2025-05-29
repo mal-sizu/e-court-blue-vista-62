@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { User, Search, Filter, Plus, Mail, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,42 +8,29 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Dialog, DialogTrigger, DialogContent } from '../ui/dialog';
 import { AddUserForm } from '../forms';
+import userService from '../../services/userService';
 
 const UsersPage = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const users = [
-    {
-      id: 'U-001',
-      name: 'Sarah Johnson',
-      role: 'Judge',
-      email: 'sarah.johnson@court.gov',
-      phone: '+1 (555) 123-4567',
-      status: 'Active',
-      department: 'Civil Court',
-      joinDate: '2020-01-15'
-    },
-    {
-      id: 'U-002',
-      name: 'Robert Davis',
-      role: 'Court Clerk',
-      email: 'robert.davis@court.gov',
-      phone: '+1 (555) 234-5678',
-      status: 'Active',
-      department: 'Criminal Court',
-      joinDate: '2021-03-22'
-    },
-    {
-      id: 'U-003',
-      name: 'Maria Garcia',
-      role: 'Registrar',
-      email: 'maria.garcia@court.gov',
-      phone: '+1 (555) 345-6789',
-      status: 'Inactive',
-      department: 'Administrative',
-      joinDate: '2019-07-08'
-    }
-  ];
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await userService.findUsers();
+        setUsers(Array.isArray(data) ? data : []);
+      } catch (err) {
+        setError('Failed to load users.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUsers();
+  }, []);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -64,6 +50,23 @@ const UsersPage = () => {
       default: return 'bg-gray-100 text-gray-800';
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p className="text-gray-600">Loading users...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <p className="text-red-600">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -140,7 +143,7 @@ const UsersPage = () => {
                     <div className="flex items-center space-x-3">
                       <Avatar className="h-12 w-12 bg-blue-600">
                         <AvatarFallback className="bg-blue-600 text-white font-semibold">
-                          {user.name.split(' ').map(n => n[0]).join('')}
+                          {user.name?.split(' ').map(n => n[0]).join('')}
                         </AvatarFallback>
                       </Avatar>
                       <div>
@@ -207,7 +210,7 @@ const UsersPage = () => {
                         <div className="flex items-center space-x-3">
                           <Avatar className="h-8 w-8 bg-blue-600">
                             <AvatarFallback className="bg-blue-600 text-white text-sm">
-                              {user.name.split(' ').map(n => n[0]).join('')}
+                              {user.name?.split(' ').map(n => n[0]).join('')}
                             </AvatarFallback>
                           </Avatar>
                           <span className="font-medium">{user.name}</span>

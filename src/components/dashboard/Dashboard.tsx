@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { 
   FileText, 
@@ -13,83 +12,88 @@ import WelcomeHeader from './WelcomeHeader';
 import StatsGrid from './StatsGrid';
 import RecentActivity from './RecentActivity';
 import QuickActions from './QuickActions';
+import dashboardService from '../../services/dashboardService';
 
 const Dashboard = () => {
   const { user } = useAuth();
 
-  const stats = [
-    { 
-      name: 'Total Cases', 
-      value: '156', 
-      change: '+12%', 
-      trend: 'up',
+  const [stats, setStats] = useState([]);
+  const [recentActivity, setRecentActivity] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Map API stats keys to UI config
+  const statConfig = [
+    {
+      key: 'totalCases',
+      name: 'Total Cases',
       icon: FileText,
       color: 'from-blue-500 to-blue-600',
       bgColor: 'bg-blue-50',
-      iconColor: 'text-blue-600'
+      iconColor: 'text-blue-600',
     },
-    { 
-      name: 'Pending Requests', 
-      value: '23', 
-      change: '+5%', 
-      trend: 'up',
+    {
+      key: 'pendingRequests',
+      name: 'Pending Requests',
       icon: Clock,
       color: 'from-amber-500 to-orange-600',
       bgColor: 'bg-amber-50',
-      iconColor: 'text-amber-600'
+      iconColor: 'text-amber-600',
     },
-    { 
-      name: 'Today\'s Hearings', 
-      value: '8', 
-      change: '+2%', 
-      trend: 'up',
+    {
+      key: 'todaysHearings',
+      name: "Today's Hearings",
       icon: Calendar,
       color: 'from-green-500 to-emerald-600',
       bgColor: 'bg-green-50',
-      iconColor: 'text-green-600'
+      iconColor: 'text-green-600',
     },
-    { 
-      name: 'Evidence Items', 
-      value: '342', 
-      change: '+18%', 
-      trend: 'up',
+    {
+      key: 'evidenceItems',
+      name: 'Evidence Items',
       icon: Database,
       color: 'from-purple-500 to-violet-600',
       bgColor: 'bg-purple-50',
-      iconColor: 'text-purple-600'
-    }
+      iconColor: 'text-purple-600',
+    },
   ];
 
-  const recentActivity = [
-    { 
-      action: 'New case request submitted', 
-      time: '2 hours ago', 
-      type: 'request',
-      status: 'pending',
-      priority: 'high'
-    },
-    { 
-      action: 'Hearing scheduled for Case #2024-001', 
-      time: '4 hours ago', 
-      type: 'hearing',
-      status: 'scheduled',
-      priority: 'medium'
-    },
-    { 
-      action: 'Evidence uploaded for Case #2024-003', 
-      time: '6 hours ago', 
-      type: 'evidence',
-      status: 'completed',
-      priority: 'low'
-    },
-    { 
-      action: 'Case #2024-002 approved', 
-      time: '1 day ago', 
-      type: 'approval',
-      status: 'completed',
-      priority: 'medium'
-    }
-  ];
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        // Fetch stats and activity in parallel
+        const [statsRes, activityRes] = await Promise.all([
+          dashboardService.getDashboardStats(),
+          dashboardService.getActivityTimeline(),
+        ]);
+
+        // Map stats to UI format
+        const mappedStats = statConfig.map((cfg) => ({
+          name: cfg.name,
+          value: statsRes?.[cfg.key]?.value?.toString() || '0',
+          change: statsRes?.[cfg.key]?.change || '+0%',
+          trend: statsRes?.[cfg.key]?.trend || 'up',
+          icon: cfg.icon,
+          color: cfg.color,
+          bgColor: cfg.bgColor,
+          iconColor: cfg.iconColor,
+        }));
+        setStats(mappedStats);
+
+        // Map activity to UI format (fallback to empty array)
+        setRecentActivity(
+          Array.isArray(activityRes) ? activityRes : []
+        );
+      } catch (err) {
+        setError('Failed to load dashboard data.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDashboardData();
+  }, []);
 
   const quickActions = [
     {
@@ -98,7 +102,7 @@ const Dashboard = () => {
       href: '/case-requests',
       icon: Plus,
       color: 'from-blue-600 to-blue-700',
-      bgColor: 'bg-blue-50'
+      bgColor: 'bg-blue-50',
     },
     {
       title: 'Schedule Hearing',
@@ -106,7 +110,7 @@ const Dashboard = () => {
       href: '/hearings',
       icon: Calendar,
       color: 'from-green-600 to-green-700',
-      bgColor: 'bg-green-50'
+      bgColor: 'bg-green-50',
     },
     {
       title: 'Review Evidence',
@@ -114,7 +118,7 @@ const Dashboard = () => {
       href: '/evidence',
       icon: Database,
       color: 'from-purple-600 to-purple-700',
-      bgColor: 'bg-purple-50'
+      bgColor: 'bg-purple-50',
     },
     {
       title: 'User Management',
@@ -122,9 +126,26 @@ const Dashboard = () => {
       href: '/users',
       icon: Users,
       color: 'from-orange-600 to-orange-700',
-      bgColor: 'bg-orange-50'
-    }
+      bgColor: 'bg-orange-50',
+    },
   ];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p className="text-gray-600">Loading dashboard...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <p className="text-red-600">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">

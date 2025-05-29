@@ -6,6 +6,11 @@ const dashboardService = {
     return response.data;
   },
 
+  refreshDashboardStats: async () => {
+    const response = await api.post('/dashboard/refresh');
+    return response.data;
+  },
+
   getRecentCases: async () => {
     const response = await api.get('/dashboard/recent-cases');
     return response.data;

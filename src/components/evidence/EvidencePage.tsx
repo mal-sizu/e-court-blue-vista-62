@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { File, Image, Video, FileText, Search, Filter, Plus, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,45 +7,41 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogTrigger, DialogContent } from '../ui/dialog';
 import { UploadEvidenceForm } from '../forms';
+import { searchEvidence } from '../../services/evidenceService';
+
+const iconMap = {
+  Document: FileText,
+  Video: Video,
+  Image: Image,
+  Audio: File, // fallback for audio
+};
 
 const EvidencePage = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [evidenceItems, setEvidenceItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const evidenceItems = [
-    {
-      id: 'E-2024-001',
-      name: 'Contract Document.pdf',
-      type: 'Document',
-      size: '2.5 MB',
-      caseId: 'C-2024-001',
-      uploadDate: '2024-06-10',
-      uploadedBy: 'John Smith',
-      status: 'Verified',
-      icon: FileText
-    },
-    {
-      id: 'E-2024-002',
-      name: 'Security Camera Footage.mp4',
-      type: 'Video',
-      size: '45.2 MB',
-      caseId: 'C-2024-002',
-      uploadDate: '2024-06-12',
-      uploadedBy: 'Detective Brown',
-      status: 'Under Review',
-      icon: Video
-    },
-    {
-      id: 'E-2024-003',
-      name: 'Witness Photo Evidence.jpg',
-      type: 'Image',
-      size: '1.8 MB',
-      caseId: 'C-2024-003',
-      uploadDate: '2024-06-14',
-      uploadedBy: 'Jane Doe',
-      status: 'Approved',
-      icon: Image
-    }
-  ];
+  useEffect(() => {
+    const fetchEvidence = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await searchEvidence();
+        // Map icon for each evidence item
+        const mapped = (Array.isArray(data) ? data : []).map((item) => ({
+          ...item,
+          icon: iconMap[item.type] || File,
+        }));
+        setEvidenceItems(mapped);
+      } catch (err) {
+        setError('Failed to load evidence items.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEvidence();
+  }, []);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -68,6 +63,23 @@ const EvidencePage = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p className="text-gray-600">Loading evidence...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <p className="text-red-600">{error}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -88,7 +100,6 @@ const EvidencePage = () => {
             <UploadEvidenceForm />
           </DialogContent>
         </Dialog>
-
       </div>
 
       {/* Filters */}

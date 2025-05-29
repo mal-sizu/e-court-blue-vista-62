@@ -1,40 +1,45 @@
 import api from './api';
 
 const userService = {
-  getAllUsers: async () => {
-    const response = await api.get('/users');
+  registerUser: async (formData) => {
+    const response = await api.post('/user/register', formData);
     return response.data;
   },
 
-  getUserById: async (id) => {
-    const response = await api.get(`/users/${id}`);
+  registerUserEmergency: async (formData) => {
+    const response = await api.post('/user/registeremegency', formData);
     return response.data;
   },
 
-  createUser: async (userData) => {
-    const response = await api.post('/users', userData);
+  updateUser: async (formData) => {
+    const response = await api.put('/user/update', formData);
     return response.data;
   },
 
-  updateUser: async (id, userData) => {
-    const response = await api.put(`/users/${id}`, userData);
+  deleteUser: async (userId) => {
+    const response = await api.delete('/user/delete', {
+      data: { userId }
+    });
     return response.data;
   },
 
-  deleteUser: async (id) => {
-    const response = await api.delete(`/users/${id}`);
+  findUser: async (userData) => {
+    const response = await api.post('/user/finduser', userData);
     return response.data;
   },
 
-  updateProfile: async (userData) => {
-    const response = await api.put('/users/profile', userData);
+  findUsers: async () => {
+    const response = await api.get('/user/findusers');
     return response.data;
   },
 
-  changePassword: async (passwordData) => {
-    const response = await api.put('/users/change-password', passwordData);
+  suspendUser: async (userData) => {
+    const response = await api.put('/user/suspend', userData);
     return response.data;
   }
 };
 
 export default userService; 
+
+
+

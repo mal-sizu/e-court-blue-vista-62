@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Archive, Search, Filter, Plus, Calendar, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,42 +7,29 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogTrigger, DialogContent } from '../ui/dialog';
 import { AddRecordForm } from '../forms';
+import { getAllRecords } from '../../services/recordRoomService';
 
 const RecordRoomPage = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [records, setRecords] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const records = [
-    {
-      id: 'R-2024-001',
-      title: 'Contract Dispute Case Record',
-      caseId: 'C-2024-001',
-      type: 'Case File',
-      date: '2024-06-15',
-      status: 'Active',
-      location: 'Shelf A-12',
-      pages: 45
-    },
-    {
-      id: 'R-2024-002',
-      title: 'Criminal Investigation Record',
-      caseId: 'C-2024-002',
-      type: 'Investigation',
-      date: '2024-06-10',
-      status: 'Archived',
-      location: 'Shelf B-08',
-      pages: 78
-    },
-    {
-      id: 'R-2024-003',
-      title: 'Employment Dispute Documentation',
-      caseId: 'C-2024-003',
-      type: 'Labour Record',
-      date: '2024-06-12',
-      status: 'Under Review',
-      location: 'Shelf C-15',
-      pages: 32
-    }
-  ];
+  useEffect(() => {
+    const fetchRecords = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await getAllRecords();
+        setRecords(Array.isArray(data) ? data : []);
+      } catch (err) {
+        setError('Failed to load records.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRecords();
+  }, []);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -62,6 +48,23 @@ const RecordRoomPage = () => {
       default: return 'bg-gray-100 text-gray-800';
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p className="text-gray-600">Loading records...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <p className="text-red-600">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, MapPin, Search, Filter, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,45 +7,29 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogTrigger, DialogContent } from '../ui/dialog';
 import { ScheduleHearingForm } from '../forms';
+import hearingService from '../../services/hearingService';
 
 const HearingsPage = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [hearings, setHearings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const hearings = [
-    {
-      id: 'H-2024-001',
-      caseId: 'C-2024-001',
-      title: 'Contract Dispute - Initial Hearing',
-      date: '2024-06-15',
-      time: '10:00 AM',
-      courtroom: 'Courtroom A',
-      judge: 'Hon. Sarah Johnson',
-      status: 'Scheduled',
-      type: 'Initial Hearing'
-    },
-    {
-      id: 'H-2024-002',
-      caseId: 'C-2024-002',
-      title: 'Theft Case - Evidence Review',
-      date: '2024-06-20',
-      time: '2:00 PM',
-      courtroom: 'Courtroom B',
-      judge: 'Hon. Robert Davis',
-      status: 'In Progress',
-      type: 'Evidence Review'
-    },
-    {
-      id: 'H-2024-003',
-      caseId: 'C-2024-003',
-      title: 'Employment Dispute - Settlement Conference',
-      date: '2024-06-25',
-      time: '9:00 AM',
-      courtroom: 'Conference Room 1',
-      judge: 'Hon. Maria Garcia',
-      status: 'Postponed',
-      type: 'Settlement'
-    }
-  ];
+  useEffect(() => {
+    const fetchHearings = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await hearingService.getAllHearings();
+        setHearings(Array.isArray(data) ? data : []);
+      } catch (err) {
+        setError('Failed to load hearings.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchHearings();
+  }, []);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -57,6 +40,23 @@ const HearingsPage = () => {
       default: return 'bg-gray-100 text-gray-800';
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p className="text-gray-600">Loading hearings...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <p className="text-red-600">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

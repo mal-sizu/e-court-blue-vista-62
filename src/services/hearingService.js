@@ -1,8 +1,8 @@
 import api from './api';
 
 const hearingService = {
-  getAllHearings: async () => {
-    const response = await api.get('/hearings');
+  getAllHearings: async (filters = {}) => {
+    const response = await api.get('/hearing/all', { params: filters });
     return response.data;
   },
 
@@ -12,7 +12,7 @@ const hearingService = {
   },
 
   createHearing: async (hearingData) => {
-    const response = await api.post('/hearings', hearingData);
+    const response = await api.post('/hearing/create', hearingData);
     return response.data;
   },
 
@@ -38,6 +38,21 @@ const hearingService = {
 
   addHearingNotes: async (hearingId, notes) => {
     const response = await api.post(`/hearings/${hearingId}/notes`, { notes });
+    return response.data;
+  },
+
+  updateHearingDocuments: async (formData) => {
+    const response = await api.put('/hearing/documents', formData);
+    return response.data;
+  },
+
+  updateHearingAdmin: async (formData) => {
+    const response = await api.put('/hearing/updateadmin', formData);
+    return response.data;
+  },
+
+  approveHearingReport: async (hearingData) => {
+    const response = await api.put('/hearing/approve', hearingData);
     return response.data;
   }
 };

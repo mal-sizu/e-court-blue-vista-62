@@ -1,8 +1,10 @@
 import api from './api';
 
 const notificationService = {
-  getAllNotifications: async () => {
-    const response = await api.get('/notifications');
+  getUserNotifications: async (limit = 20, skip = 0) => {
+    const response = await api.get('/notifications', {
+      params: { limit, skip }
+    });
     return response.data;
   },
 
@@ -12,12 +14,12 @@ const notificationService = {
   },
 
   markAsRead: async (notificationId) => {
-    const response = await api.put(`/notifications/${notificationId}/read`);
+    const response = await api.patch(`/notifications/${notificationId}/read`);
     return response.data;
   },
 
   markAllAsRead: async () => {
-    const response = await api.put('/notifications/mark-all-read');
+    const response = await api.patch('/notifications/read-all');
     return response.data;
   },
 
