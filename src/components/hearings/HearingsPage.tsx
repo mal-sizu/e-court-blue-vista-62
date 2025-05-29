@@ -13,17 +13,62 @@ const HearingsPage = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [hearings, setHearings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [isMock, setIsMock] = useState(false);
+
+  // Mock hearings data
+  const mockHearings = [
+    {
+      id: 'HEAR-001',
+      title: 'Civil Case Hearing: Smith vs. Jones',
+      date: '2024-06-10',
+      time: '10:00 AM',
+      courtroom: 'Courtroom 1',
+      judge: 'Hon. Alice Johnson',
+      type: 'Civil',
+      status: 'Scheduled',
+    },
+    {
+      id: 'HEAR-002',
+      title: 'Criminal Case Hearing: State vs. Doe',
+      date: '2024-06-12',
+      time: '2:00 PM',
+      courtroom: 'Courtroom 2',
+      judge: 'Hon. Bob Smith',
+      type: 'Criminal',
+      status: 'In Progress',
+    },
+    {
+      id: 'HEAR-003',
+      title: 'Labour Tribunal: Union vs. Factory',
+      date: '2024-06-15',
+      time: '9:00 AM',
+      courtroom: 'Courtroom 3',
+      judge: 'Hon. Carol Lee',
+      type: 'Labour',
+      status: 'Postponed',
+    },
+    {
+      id: 'HEAR-004',
+      title: 'Civil Case Hearing: Brown vs. Green',
+      date: '2024-06-18',
+      time: '11:30 AM',
+      courtroom: 'Courtroom 1',
+      judge: 'Hon. David Kim',
+      type: 'Civil',
+      status: 'Completed',
+    },
+  ];
 
   useEffect(() => {
     const fetchHearings = async () => {
       setLoading(true);
-      setError(null);
+      setIsMock(false);
       try {
         const data = await hearingService.getAllHearings();
         setHearings(Array.isArray(data) ? data : []);
       } catch (err) {
-        setError('Failed to load hearings.');
+        setIsMock(true);
+        setHearings(mockHearings);
       } finally {
         setLoading(false);
       }
@@ -50,16 +95,11 @@ const HearingsPage = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <p className="text-red-600">{error}</p>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
+      {isMock && (
+        <div className="mb-2 text-sm text-blue-500 bg-blue-50 rounded px-3 py-1 w-fit">Showing mock data</div>
+      )}
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>

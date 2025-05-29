@@ -14,17 +14,62 @@ const UsersPage = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [isMock, setIsMock] = useState(false);
+
+  // Mock users data
+  const mockUsers = [
+    {
+      id: '1',
+      name: 'Alice Johnson',
+      role: 'Judge',
+      email: 'alice.johnson@example.com',
+      phone: '555-1234',
+      department: 'Civil',
+      joinDate: '2022-01-15',
+      status: 'Active',
+    },
+    {
+      id: '2',
+      name: 'Bob Smith',
+      role: 'Court Clerk',
+      email: 'bob.smith@example.com',
+      phone: '555-5678',
+      department: 'Criminal',
+      joinDate: '2021-11-20',
+      status: 'Inactive',
+    },
+    {
+      id: '3',
+      name: 'Carol Lee',
+      role: 'Registrar',
+      email: 'carol.lee@example.com',
+      phone: '555-8765',
+      department: 'Family',
+      joinDate: '2023-03-10',
+      status: 'Suspended',
+    },
+    {
+      id: '4',
+      name: 'David Kim',
+      role: 'Lawyer',
+      email: 'david.kim@example.com',
+      phone: '555-4321',
+      department: 'Civil',
+      joinDate: '2020-07-05',
+      status: 'Active',
+    },
+  ];
 
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
-      setError(null);
+      setIsMock(false);
       try {
-        const data = await userService.findUsers();
+        const data = await userService.getAllUsers();
         setUsers(Array.isArray(data) ? data : []);
       } catch (err) {
-        setError('Failed to load users.');
+        setIsMock(true);
+        setUsers(mockUsers);
       } finally {
         setLoading(false);
       }
@@ -60,16 +105,11 @@ const UsersPage = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <p className="text-red-600">{error}</p>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
+      {isMock && (
+        <div className="mb-2 text-sm text-blue-500 bg-blue-50 rounded px-3 py-1 w-fit">Showing mock data</div>
+      )}
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>

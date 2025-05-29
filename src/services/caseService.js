@@ -2,12 +2,12 @@ import api from './api';
 
 const caseService = {
   getAllCases: async () => {
-    const response = await api.get('/cases');
+    const response = await api.get('/case');
     return response.data;
   },
 
   getCaseById: async (id) => {
-    const response = await api.get(`/cases/${id}`);
+    const response = await api.get(`/case/${id}`);
     return response.data;
   },
 
@@ -27,14 +27,14 @@ const caseService = {
   },
 
   getCaseDocuments: async (caseId) => {
-    const response = await api.get(`/cases/${caseId}/documents`);
+    const response = await api.get(`/case/${caseId}/documents`);
     return response.data;
   },
 
   uploadCaseDocument: async (caseId, documentData) => {
     const formData = new FormData();
     formData.append('file', documentData);
-    const response = await api.post(`/cases/${caseId}/documents`, formData, {
+    const response = await api.post(`/case/${caseId}/documents`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -43,7 +43,7 @@ const caseService = {
   },
 
   getCaseTimeline: async (caseId) => {
-    const response = await api.get(`/cases/${caseId}/timeline`);
+    const response = await api.get(`/case/${caseId}/timeline`);
     return response.data;
   },
 

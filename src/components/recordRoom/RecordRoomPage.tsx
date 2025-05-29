@@ -13,17 +13,62 @@ const RecordRoomPage = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [isMock, setIsMock] = useState(false);
+
+  // Mock records data
+  const mockRecords = [
+    {
+      id: 'REC-001',
+      title: 'Civil Case File: Smith vs. Jones',
+      type: 'Case File',
+      caseId: 'CIV-2024-001',
+      location: 'Shelf A1',
+      status: 'Active',
+      pages: 120,
+      date: '2024-01-10',
+    },
+    {
+      id: 'REC-002',
+      title: 'Criminal Investigation: State vs. Doe',
+      type: 'Investigation',
+      caseId: 'CRIM-2024-002',
+      location: 'Shelf B2',
+      status: 'Archived',
+      pages: 85,
+      date: '2023-12-22',
+    },
+    {
+      id: 'REC-003',
+      title: 'Labour Tribunal: Union vs. Factory',
+      type: 'Labour Record',
+      caseId: 'LAB-2024-003',
+      location: 'Shelf C3',
+      status: 'Under Review',
+      pages: 200,
+      date: '2024-02-05',
+    },
+    {
+      id: 'REC-004',
+      title: 'Civil Case File: Brown vs. Green',
+      type: 'Case File',
+      caseId: 'CIV-2024-004',
+      location: 'Shelf A2',
+      status: 'Active',
+      pages: 95,
+      date: '2024-01-25',
+    },
+  ];
 
   useEffect(() => {
     const fetchRecords = async () => {
       setLoading(true);
-      setError(null);
+      setIsMock(false);
       try {
         const data = await getAllRecords();
         setRecords(Array.isArray(data) ? data : []);
       } catch (err) {
-        setError('Failed to load records.');
+        setIsMock(true);
+        setRecords(mockRecords);
       } finally {
         setLoading(false);
       }
@@ -58,16 +103,11 @@ const RecordRoomPage = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <p className="text-red-600">{error}</p>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
+      {isMock && (
+        <div className="mb-2 text-sm text-blue-500 bg-blue-50 rounded px-3 py-1 w-fit">Showing mock data</div>
+      )}
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>

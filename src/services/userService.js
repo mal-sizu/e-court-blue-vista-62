@@ -36,7 +36,13 @@ const userService = {
   suspendUser: async (userData) => {
     const response = await api.put('/user/suspend', userData);
     return response.data;
-  }
+  },
+
+  getAllUsers: async () => {
+    const response = await api.get('/user/');
+    return response.data;
+  } 
+
 };
 
 export default userService; 
