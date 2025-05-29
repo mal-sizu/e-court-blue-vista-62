@@ -8,6 +8,7 @@ import LoginForm from './LoginForm';
 import OTPForm from './OTPForm';
 import authService from '../../services/authService';
 import bcrypt from 'bcryptjs';
+import { jwtDecode } from 'jwt-decode';
 
 const Login = () => {
   const [step, setStep] = useState<'login' | 'otp'>('login');
@@ -20,7 +21,7 @@ const Login = () => {
     try {
       // const hashedPassword = await bcrypt.hash(data.password, 12);
       const response = await authService.login({
-        emailOfficial: data.email,
+        emailOffice: data.email,
         password: data.password
       });
       setEmail(data.email);
@@ -36,10 +37,19 @@ const Login = () => {
     setLoading(true);
     try {
       const response = await authService.verifyOTPLogin({
-        email: email,
-        otp: data.otp
+        emailOffice: email,
+        userOTP: data.otp
       });
-      const { user, token } = response;
+      const { token } = response;
+      // Decode the JWT token to extract user info
+      const decoded: any = jwtDecode(token);
+      // Map the decoded token to the User interface
+      const user = {
+        id: decoded.id,
+        fullName: decoded.fullName || '', // fallback if not present
+        email: email,
+        role: decoded.role || (decoded.activeRole ? decoded.activeRole[0] : '')
+      };
       login(user, token);
     } catch (error) {
       console.error('OTP verification error:', error);

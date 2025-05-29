@@ -1,73 +1,68 @@
-# Welcome to your Lovable project
+# e-court-blue-vista-62
 
-## Project info
+A modern web application for law firm and court management, featuring secure authentication and dashboard statistics.
 
-**URL**: https://lovable.dev/projects/504ed528-432c-414c-ba69-5ca45b3da344
+## Features
+- Email/password login with OTP verification
+- JWT-based authentication
+- User dashboard with real-time and statistical data
+- Role-based access
 
-## How can I edit this code?
+## Getting Started
 
-There are several ways of editing your application.
+### Prerequisites
+- Node.js (v16+ recommended)
+- npm or bun
 
-**Use Lovable**
+### Installation
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/504ed528-432c-414c-ba69-5ca45b3da344) and start prompting.
+1. Clone the repository:
+   ```sh
+   git clone <repo-url>
+   cd e-court-blue-vista-62
+   ```
+2. Install dependencies:
+   ```sh
+   npm install
+   # or
+   bun install
+   ```
+3. Start the development server:
+   ```sh
+   npm run dev
+   # or
+   bun run dev
+   ```
 
-Changes made via Lovable will be committed automatically to this repo.
+### Environment Variables
+- Configure your backend API endpoints and secrets as needed (see `vite.config.ts` or your environment setup).
 
-**Use your preferred IDE**
+## Authentication Flow
+1. **Login:**
+   - User enters email and password.
+   - Credentials are sent to `/auth/login`.
+   - On success, the app prompts for OTP.
+2. **OTP Verification:**
+   - User enters the OTP sent to their email.
+   - OTP is verified via `/auth/login-verifyotp`.
+   - On success, a JWT token is received.
+3. **Dashboard Stats Fetch:**
+   - The app uses the JWT token to call `/api/dashboard/stats`.
+   - User data and access rights are loaded into the app context.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Project Structure
+- `src/components/auth/` — Authentication UI and logic
+- `src/context/AuthContext.tsx` — Global authentication state
+- `src/services/authService.js` — API calls for authentication and dashboard
+- `src/pages/` — App pages
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Customization
+- Update the `User` interface in `AuthContext.tsx` to match your backend's user data.
+- Adjust API endpoints in `authService.js` as needed.
 
-Follow these steps:
+## Troubleshooting
+- If you see `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`, check your API endpoint and backend status.
+- Ensure your frontend is correctly proxying API requests to the backend.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/504ed528-432c-414c-ba69-5ca45b3da344) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## License
+MIT
