@@ -17,11 +17,11 @@ const Login = () => {
 
   const handleLogin = async (data: { email: string; password: string }) => {
     setLoading(true);
-    const hashedPassword = await bcrypt.hash(data.password, 10);
     try {
+      // const hashedPassword = await bcrypt.hash(data.password, 12);
       const response = await authService.login({
-        email: data.email,
-        password: hashedPassword
+        emailOfficial: data.email,
+        password: data.password
       });
       setEmail(data.email);
       setStep('otp');
