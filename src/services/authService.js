@@ -2,6 +2,7 @@ import api from './api';
 import { jwtDecode } from 'jwt-decode';
 
 const authService = {
+  
   login: async (credentials) => {
     const response = await api.post('/auth/login', credentials);
     if (response.data.token) {

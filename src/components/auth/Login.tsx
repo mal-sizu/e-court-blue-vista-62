@@ -9,6 +9,7 @@ import OTPForm from './OTPForm';
 import authService from '../../services/authService';
 import bcrypt from 'bcryptjs';
 import { jwtDecode } from 'jwt-decode';
+import dashboardService from '../../services/dashboardService';
 
 const Login = () => {
   const [step, setStep] = useState<'login' | 'otp'>('login');
@@ -41,14 +42,15 @@ const Login = () => {
         userOTP: data.otp
       });
       const { token } = response;
-      // Decode the JWT token to extract user info
+      // Fetch user info from dashboard stats
+      const dashboardData = await dashboardService.getDashboardStats(token);
       const decoded: any = jwtDecode(token);
-      // Map the decoded token to the User interface
       const user = {
         id: decoded.id,
-        fullName: decoded.fullName || '', // fallback if not present
+        fullName: dashboardData.user.name,
         email: email,
-        role: decoded.role || (decoded.activeRole ? decoded.activeRole[0] : '')
+        role: dashboardData.user.role,
+        image: dashboardData.user.image || ''
       };
       login(user, token);
     } catch (error) {

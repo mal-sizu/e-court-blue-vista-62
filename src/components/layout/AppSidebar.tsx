@@ -1,4 +1,3 @@
-
 import { 
   LayoutDashboard, 
   FileText, 
@@ -80,7 +79,7 @@ const AppSidebar = () => {
   ];
 
   const filteredMenuItems = menuItems.filter(item => 
-    item.roles.includes(user?.role)
+    item.roles.includes(user?.role?.toLowerCase())
   );
 
   const handleNavigation = (path: string) => {
@@ -154,9 +153,17 @@ const AppSidebar = () => {
         <div className="p-4 space-y-4">
           <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm border border-blue-100">
             <Avatar className="h-10 w-10 bg-blue-600">
-              <AvatarFallback className="bg-blue-600 text-white font-semibold">
-                {user?.fullName?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
-              </AvatarFallback>
+              {user?.image ? (
+                <img
+                  src={user.image}
+                  alt={user.fullName}
+                  className="h-10 w-10 rounded-full object-cover"
+                />
+              ) : (
+                <AvatarFallback className="bg-blue-600 text-white font-semibold">
+                  {user?.fullName?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
+                </AvatarFallback>
+              )}
             </Avatar>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-gray-900 truncate">
@@ -167,7 +174,7 @@ const AppSidebar = () => {
               </p>
             </div>
           </div>
-          
+
           <Button
             variant="outline"
             onClick={logout}

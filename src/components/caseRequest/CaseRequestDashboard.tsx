@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import CaseRequestHeader from './CaseRequestHeader';
 import CaseRequestStats from './CaseRequestStats';
 import CaseRequestFilters from './CaseRequestFilters';
 import CaseRequestTable from './CaseRequestTable';
+import { getAllCaseRequests } from '../../services/caseRequestService';
 
 interface CaseRequest {
   id: string;
@@ -24,6 +24,7 @@ const CaseRequestDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
+  const [isMock, setIsMock] = useState(false);
 
   // Mock data
   const mockData: CaseRequest[] = [
@@ -62,11 +63,13 @@ const CaseRequestDashboard = () => {
   useEffect(() => {
     const fetchCaseRequests = async () => {
       setLoading(true);
+      setIsMock(false);
       try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setCaseRequests(mockData);
+        const data = await getAllCaseRequests();
+        setCaseRequests(Array.isArray(data) ? data : []);
       } catch (error) {
-        console.error('Error fetching case requests:', error);
+        setIsMock(true);
+        setCaseRequests(mockData);
       } finally {
         setLoading(false);
       }
@@ -98,7 +101,9 @@ const CaseRequestDashboard = () => {
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
       <CaseRequestHeader />
-      
+      {isMock && (
+        <div className="mb-2 text-sm text-blue-500 bg-blue-50 rounded px-3 py-1 w-fit">Showing mock data</div>
+      )}
       <CaseRequestStats />
       
       <CaseRequestFilters

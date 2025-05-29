@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface User {
@@ -6,6 +5,7 @@ interface User {
   fullName: string;
   email: string;
   role: string;
+  image?: string;
 }
 
 interface AuthContextType {

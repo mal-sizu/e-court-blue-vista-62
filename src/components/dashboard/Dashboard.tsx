@@ -20,7 +20,7 @@ const Dashboard = () => {
   const [stats, setStats] = useState([]);
   const [recentActivity, setRecentActivity] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [isMock, setIsMock] = useState(false);
 
   // Map API stats keys to UI config
   const statConfig = [
@@ -58,10 +58,23 @@ const Dashboard = () => {
     },
   ];
 
+  // Mock data for fallback
+  const mockStatsRes = {
+    totalCases: { value: 120, change: '+5%', trend: 'up' },
+    pendingRequests: { value: 8, change: '-2%', trend: 'down' },
+    todaysHearings: { value: 3, change: '+1%', trend: 'up' },
+    evidenceItems: { value: 45, change: '+10%', trend: 'up' },
+  };
+  const mockActivity = [
+    { id: 1, type: 'case', description: 'Case #1234 created', date: '2024-06-01' },
+    { id: 2, type: 'hearing', description: 'Hearing scheduled for Case #1234', date: '2024-06-02' },
+    { id: 3, type: 'evidence', description: 'Evidence uploaded for Case #1234', date: '2024-06-03' },
+  ];
+
   useEffect(() => {
     const fetchDashboardData = async () => {
       setLoading(true);
-      setError(null);
+      setIsMock(false);
       try {
         // Fetch stats and activity in parallel
         const [statsRes, activityRes] = await Promise.all([
@@ -87,7 +100,20 @@ const Dashboard = () => {
           Array.isArray(activityRes) ? activityRes : []
         );
       } catch (err) {
-        setError('Failed to load dashboard data.');
+        setIsMock(true);
+        // Use mock data
+        const mappedStats = statConfig.map((cfg) => ({
+          name: cfg.name,
+          value: mockStatsRes?.[cfg.key]?.value?.toString() || '0',
+          change: mockStatsRes?.[cfg.key]?.change || '+0%',
+          trend: mockStatsRes?.[cfg.key]?.trend || 'up',
+          icon: cfg.icon,
+          color: cfg.color,
+          bgColor: cfg.bgColor,
+          iconColor: cfg.iconColor,
+        }));
+        setStats(mappedStats);
+        setRecentActivity(mockActivity);
       } finally {
         setLoading(false);
       }
@@ -139,18 +165,14 @@ const Dashboard = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <p className="text-red-600">{error}</p>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
       <WelcomeHeader userName={user?.fullName} />
       
+      {isMock && (
+        <div className="mb-2 text-sm text-blue-500 bg-blue-50 rounded px-3 py-1 w-fit">Showing mock data</div>
+      )}
+
       <StatsGrid stats={stats} />
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
